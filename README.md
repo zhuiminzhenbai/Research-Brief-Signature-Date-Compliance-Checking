@@ -70,7 +70,14 @@ anchor height. This survives differences in scan resolution and placement.
 | `detect4.py`, `error4_mask2.py` | 4 `TYPED_SIGNATURE` (OCR pre-filter → VLM) |
 | `detect5.py`, `doc_precheck.py` | 5 `PASTED_IMAGE_SIGNATURE` |
 
-### Results (committed — trimmed to the final artifacts)
+### Visual gallery — `results_gallery/`
+At-a-glance annotated pages produced by `visualize_results.py`: each required
+signature field is boxed and labeled with its verdict (green = SIGNED/PASS,
+red = MISSING/TOO_FAINT, orange = WRONG_BOX, yellow = REVIEW). Covers a missing
+signature, a wrong-box signature, faint cases, and normal signed pages across all
+four form types.
+
+### Machine-readable results (committed — trimmed to the final artifacts)
 | Path | What it shows |
 |------|---------------|
 | `detect12_out/detect12.json` | Errors 1 & 2 full run (per-field status + metrics) |
