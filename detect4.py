@@ -30,11 +30,12 @@ TPL = r"C:\Users\25775\Desktop\OCR_research\templates.json"
 
 SIG_INK = 0.012            # cell considered signed (same as detect12)
 PD_TYPED = 0.85            # PaddleOCR read cell content at >= this conf -> typed-leaning
-CCHCV_TYPED = 0.55         # glyph-height CV <= this is positive typed evidence
-# No typed evidence (PaddleOCR didn't read confident content AND glyphs are
-# irregular) => clear handwriting, auto-pass without a VLM call. (PaddleOCR reads
-# both typed and neat handwriting confidently, so this routes the legible-confusion
-# zone to the VLM too; only messy scrawl is auto-cleared.)
+CCHCV_TYPED = 0.55         # glyph-height CV (recorded only; no longer routes - see below)
+# Routing = OCR confidence alone. If PaddleOCR did NOT read confident content
+# (pd_score < PD_TYPED) the cell is clear handwriting -> auto-pass, no VLM call.
+# Everything legible (typed OR neat handwriting reads confidently) goes to the VLM.
+# (The glyph-height-uniformity signal was dropped: a real typed sample was MORE
+# varied than genuine handwriting, so it only caused false REVIEWs.)
 NA_RE = re.compile(r"^\s*n\.?/?\s*a\.?\s*$", re.I)
 ALPHA = re.compile(r"[A-Za-z]")
 LABEL_WORDS = re.compile(
@@ -102,7 +103,12 @@ def process(rel, tpl, use_vlm=True):
                                           "pd": pdtext}
             continue
         fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
-        typed_evidence = (pdscore >= PD_TYPED) or (fe["cc_h_cv"] <= CCHCV_TYPED)
+        # cc_h_cv (stroke-height uniformity) was dropped as a routing signal: a real
+        # standard-font typed sample measured cc_h_cv=0.75 -- MORE varied than much
+        # genuine handwriting (0.16-0.49) -- so the uniformity rule never separated
+        # typed from handwriting and only produced false REVIEWs. Standard-font typed
+        # text is caught reliably by high OCR confidence alone. (cc_h_cv still recorded.)
+        typed_evidence = pdscore >= PD_TYPED
         info = {"pd_score": round(pdscore, 3), "pd": pdtext,
                 "cc_h_cv": fe["cc_h_cv"], "band_conc": fe["band_conc"]}
         if not typed_evidence:

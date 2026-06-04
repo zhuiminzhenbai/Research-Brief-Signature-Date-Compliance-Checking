@@ -79,7 +79,8 @@ the six error types:
 | `error1_MISSING__*` | Empty required field boxed red → `MISSING` |
 | `error2_WRONGBOX__*` | Signature in the wrong field → `WRONG_BOX` (orange) |
 | `error3_faint__*` | Faint signatures with their Weber band (`REVIEW`/`PASS`) |
-| `error4_typed__*` | Signature field routing: handwriting → `SIGNED`, typed-leaning → `REVIEW` (→VLM) |
+| `error4_typed__*` | Signature field routing: handwriting → `SIGNED`, confidently-legible → `REVIEW` (→VLM) |
+| `error4_typed_POSITIVE__*` | A real typed name (standard font) caught → `TYPED_SIGNATURE` |
 | `error5_pasted_A__*` | Real phone-paste: the pasted **image object** boxed red → `PASTED_IMAGE_SIGNATURE` |
 | `error5_screenshot_B__*` | Real flattened screenshot → `DOC_NOT_SCAN` (document coverage pre-check) |
 | `normal_SIGNED__*` | Genuine signed pages (green `PASS`) for contrast |
@@ -107,7 +108,7 @@ implemented.)
 | 1 Missing | ✅ Done | 4/4 positives caught, 0 false positives on 95 signed; 6 REVIEW (anchor-not-found on degraded scans) |
 | 2 Wrong box | ✅ Done | Page-level stray-ink detection |
 | 3 Too faint | ✅ Final (pixel + synthetic) | Weber-contrast bands. **6-axis pixel study shows "faint-but-legible" is not pixel-separable** — extreme faintness only; legibility judgement needs a VLM |
-| 4 Typed | 🟡 Pipeline ready | OCR pre-filter → VLM verdict; typed-vs-handwritten is not pixel-separable, **needs VLM** |
+| 4 Typed | 🟡 Pipeline ready | OCR-confidence pre-filter (≥0.85 → VLM) → VLM verdict. A real typed sample is caught by confidence alone; the stroke-uniformity signal was dropped after it failed to separate typed from handwriting. Final typed-vs-handwriting call **needs VLM** |
 | 5 Pasted image | ✅ Done | Layer-1 structural (separate image object) + document coverage pre-check (flattened screenshots). **Validated on 2 real fraud samples + 74 originals, 0 false positives.** Pixel forensics on clean scans proven ineffective |
 | 6 Date unreadable | ⬜ Not started | Has real samples |
 

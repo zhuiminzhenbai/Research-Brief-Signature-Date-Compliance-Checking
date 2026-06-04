@@ -15,7 +15,7 @@ from fields_config import DEFAULT_OFFSETS, locate_field, get_fields, FIELDS
 from error2_stray import compute_strays
 from error3_faint import faint_metrics
 from error4_mask2 import ink_mask_v2, feats
-from detect4 import sig_crop, PD_TYPED, CCHCV_TYPED, NA_RE
+from detect4 import sig_crop, PD_TYPED, NA_RE
 from detect5 import field_boxes_pt, detect_paste
 from doc_precheck import precheck
 
@@ -82,8 +82,7 @@ def verdict4(img, items, form, fld, tpl):
     if NA_RE.match(pdtext):
         return abox, "NA", "typed N/A"
     fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
-    typed_evidence = (pdscore >= PD_TYPED) or (fe["cc_h_cv"] <= CCHCV_TYPED)
-    if not typed_evidence:
+    if pdscore < PD_TYPED:                       # not confidently legible -> handwriting
         return abox, "SIGNED", "handwriting"
     return abox, "REVIEW", "typed-candidate -> VLM"
 
@@ -161,6 +160,39 @@ def gallery_e4(tpl):
     return n
 
 
+def gallery_typed(tpl):
+    """error4 typed POSITIVE: a real typed-name sample (outside the dataset).
+    OCRs once and caches so later runs stay fast."""
+    f = os.path.join(PROJ, "100394_Form ETA-9089 Page 2_NG (not signed)_2.pdf")
+    if not os.path.exists(f):
+        return 0
+    rel = os.path.basename(f)
+    cache = C.load_cache(rel)
+    if cache is None:
+        from paddleocr import PaddleOCR
+        from ocr_cache import ocr_page
+        ocr = PaddleOCR(use_doc_orientation_classify=False, use_doc_unwarping=False,
+                        use_textline_orientation=True, lang="en")
+        items = ocr_page(ocr, C.render(f))
+        json.dump({"rel": rel, "items": items}, open(C.cache_path(rel), "w", encoding="utf-8"),
+                  ensure_ascii=False)
+    else:
+        items = cache["items"]
+    img = C.render(f)
+    form = C.detect_form(items)
+    shown = []
+    for fld in get_fields(form, required_only=True):
+        box, status, note = verdict4(img, items, form, fld, tpl)
+        if box is None:
+            continue
+        if status == "REVIEW":               # the known typed positive -> show as TYPED
+            status, note = "TYPED_SIGNATURE", note.replace("typed-candidate", "typed")
+        draw(img, box, status, note, fld["name"]); shown.append(status)
+    name = save(img, "error4_typed_POSITIVE", "typed_name_standard_font")
+    print(f"  [e4+]  {'/'.join(shown):18} -> {name}")
+    return 1
+
+
 def gallery_e5():
     """error5: draw the detected pasted-image box / document-not-scan verdict."""
     n = 0
@@ -198,7 +230,7 @@ def gallery_e5():
 
 def main():
     tpl = json.load(open(TPL, encoding="utf-8"))
-    total = gallery_e123(tpl) + gallery_e4(tpl) + gallery_e5()
+    total = gallery_e123(tpl) + gallery_e4(tpl) + gallery_typed(tpl) + gallery_e5()
     print(f"\n{total} annotated images -> {OUT}")
 
 

@@ -1,11 +1,16 @@
 # --- Secrets: never commit ---
 *.csv
 
+# --- Secrets: env files ---
+*.env
+
 # --- Real PII: scanned immigration forms (never publish) ---
 /*.pdf
+*.zip
 scanned_sign_pages/
-scanned_sign_pages.zip
 ocr_cache/
+test_f/
+.DS_Store
 
 # --- Intermediate / local ---
 _archive/
