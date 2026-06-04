@@ -9,20 +9,27 @@ Color key:  green = SIGNED/PASS   red = MISSING/TOO_FAINT
 """
 import os, glob, json
 import cv2
+import fitz
 import common as C
 from fields_config import DEFAULT_OFFSETS, locate_field, get_fields, FIELDS
 from error2_stray import compute_strays
 from error3_faint import faint_metrics
+from error4_mask2 import ink_mask_v2, feats
+from detect4 import sig_crop, PD_TYPED, CCHCV_TYPED, NA_RE
+from detect5 import field_boxes_pt, detect_paste
+from doc_precheck import precheck
 
 OUT = r"C:\Users\25775\Desktop\OCR_research\results_gallery"
 os.makedirs(OUT, exist_ok=True)
 TPL = r"C:\Users\25775\Desktop\OCR_research\templates.json"
+PROJ = r"C:\Users\25775\Desktop\OCR_research"
 
 SIG_INK, SIG_CC = 0.012, 4
 WEBER_FAIL, WEBER_REVIEW = 0.25, 0.35
 COLORS = {"SIGNED": (0, 170, 0), "PASS": (0, 170, 0), "MISSING": (0, 0, 220),
           "TOO_FAINT": (0, 0, 220), "WRONG_BOX": (0, 140, 255),
-          "REVIEW": (0, 200, 220)}
+          "REVIEW": (0, 200, 220), "TYPED_SIGNATURE": (0, 0, 220),
+          "PASTED": (0, 0, 220), "NA": (150, 150, 150), "DOC_NOT_SCAN": (0, 140, 255)}
 
 # Curated examples: (label, glob pattern). First match per pattern is used.
 EXAMPLES = [
@@ -62,6 +69,25 @@ def verdict(img, items, form, fld, tpl, strays):
     return box, status, f"weber={w:.2f}"
 
 
+def verdict4(img, items, form, fld, tpl):
+    """error4 routing (no VLM): handwriting -> SIGNED; typed-leaning -> REVIEW (->VLM)."""
+    sig, dat = locate_field(items, fld)
+    if sig is None:
+        return None, "REVIEW", "anchor_not_found"
+    abox = C.sig_box_clip_date(sig["box"], dat["box"] if dat else None,
+                               offsets(tpl, form, fld["name"], "sig"))
+    if C.ink_stats(img[abox[1]:abox[3], abox[0]:abox[2]])["ink_ratio"] < SIG_INK:
+        return None, "EMPTY", "error1's domain"
+    crop, pdtext, pdscore = sig_crop(img, items, abox)
+    if NA_RE.match(pdtext):
+        return abox, "NA", "typed N/A"
+    fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
+    typed_evidence = (pdscore >= PD_TYPED) or (fe["cc_h_cv"] <= CCHCV_TYPED)
+    if not typed_evidence:
+        return abox, "SIGNED", "handwriting"
+    return abox, "REVIEW", "typed-candidate -> VLM"
+
+
 def draw(img, box, status, note, name):
     c = COLORS.get(status, (180, 180, 180))
     cv2.rectangle(img, (box[0], box[1]), (box[2], box[3]), c, 3)
@@ -73,21 +99,26 @@ def draw(img, box, status, note, name):
                 (255, 255, 255), 2, cv2.LINE_AA)
 
 
-def main():
-    tpl = json.load(open(TPL, encoding="utf-8"))
-    made = 0
+def save(img, label, base):
+    h, w = img.shape[:2]
+    img = cv2.resize(img, (1100, int(h * 1100 / w)))
+    out = os.path.join(OUT, f"{label}__{base[:40]}.png")
+    cv2.imwrite(out, img)
+    return os.path.basename(out)
+
+
+def gallery_e123(tpl):
+    """errors 1/2/3: box each required field, label missing/wrong-box/faint verdict."""
+    n = 0
     for label, pat in EXAMPLES:
         hits = glob.glob(os.path.join(C.ROOT, "**", pat), recursive=True)
         if not hits:
-            print(f"  [skip] no match: {pat}")
-            continue
+            print(f"  [skip] no match: {pat}"); continue
         rel = os.path.relpath(hits[0], C.ROOT)
         cache = C.load_cache(rel)
         if cache is None:
-            print(f"  [skip] no cache: {rel}")
-            continue
-        items = cache["items"]
-        form = C.detect_form(items)
+            print(f"  [skip] no cache: {rel}"); continue
+        items = cache["items"]; form = C.detect_form(items)
         if form not in FIELDS:
             continue
         img = C.render(hits[0])
@@ -97,18 +128,78 @@ def main():
             box, status, note = verdict(img, items, form, fld, tpl, strays)
             if box is None:
                 continue
-            draw(img, box, status, note, fld["name"])
-            shown.append(status)
-        # downscale for a compact gallery image
-        h, w = img.shape[:2]
-        scale = 1100 / w
-        img = cv2.resize(img, (1100, int(h * scale)))
-        base = os.path.splitext(os.path.basename(rel))[0][:40]
-        out = os.path.join(OUT, f"{label}__{base}.png")
-        cv2.imwrite(out, img)
-        made += 1
-        print(f"  [{made}] {label:16} {'/'.join(shown):20} -> {os.path.basename(out)}")
-    print(f"\n{made} annotated images -> {OUT}")
+            draw(img, box, status, note, fld["name"]); shown.append(status)
+        name = save(img, label, os.path.splitext(os.path.basename(rel))[0])
+        n += 1; print(f"  [e123] {label:16} {'/'.join(shown):18} -> {name}")
+    return n
+
+
+def gallery_e4(tpl):
+    """error4: box the signature field, label the typed/handwriting routing verdict."""
+    pats = ["*101845_Form I-140 Page 6_Good*", "*79660_Form G-28 Page3_Good*",
+            "*94087_Form G-28 Page3_NG*"]
+    n = 0
+    for pat in pats:
+        hits = glob.glob(os.path.join(C.ROOT, "**", pat), recursive=True)
+        if not hits:
+            continue
+        rel = os.path.relpath(hits[0], C.ROOT)
+        cache = C.load_cache(rel)
+        if cache is None:
+            continue
+        items = cache["items"]; form = C.detect_form(items)
+        if form not in FIELDS:
+            continue
+        img = C.render(hits[0]); shown = []
+        for fld in get_fields(form, required_only=True):
+            box, status, note = verdict4(img, items, form, fld, tpl)
+            if box is None:
+                continue
+            draw(img, box, status, note, fld["name"]); shown.append(status)
+        name = save(img, "error4_typed", os.path.splitext(os.path.basename(rel))[0])
+        n += 1; print(f"  [e4]   {'/'.join(shown):18} -> {name}")
+    return n
+
+
+def gallery_e5():
+    """error5: draw the detected pasted-image box / document-not-scan verdict."""
+    n = 0
+    # Type A: phone-paste = a separate pasted image object -> red box at the hit
+    paste = glob.glob(os.path.join(PROJ, "*G-28 Page 3_NG (not signed)_*.pdf"))
+    twin = r"need_correction\G-28 Page 3\100394_Form G-28 Page 3_NG (not signed).pdf"
+    if paste:
+        form, boxes = field_boxes_pt(paste[0], twin)
+        hits = detect_paste(paste[0], boxes) if boxes else []
+        pg = fitz.open(paste[0])[0]; R = pg.rect
+        scale = 2200 / max(R.width, R.height)
+        img = C.render(paste[0])
+        flagged = {h["xref"] for h in hits}
+        for im in pg.get_image_info(xrefs=True):
+            if im["xref"] in flagged:
+                b = [int(v * scale) for v in im["bbox"]]
+                h0 = next(h for h in hits if h["xref"] == im["xref"])
+                draw(img, b, "PASTED", f"sep. image obj, dpi={h0['dpi']}", h0["field"])
+        v = "PASTED_IMAGE_SIGNATURE" if hits else "OK"
+        name = save(img, "error5_pasted_A", "phone_paste_separate_object")
+        n += 1; print(f"  [e5]   {v:22} -> {name}")
+    # Type B: flattened screenshot -> no separate object; document coverage pre-check FAILs
+    shot = glob.glob(os.path.join(PROJ, "184467*.pdf"))
+    if shot:
+        pc = precheck(shot[0])
+        img = C.render(shot[0])
+        H, W = img.shape[:2]
+        status = "DOC_NOT_SCAN" if pc["band"] == "FAIL" else "PASS"
+        draw(img, [6, 6, W - 6, H - 6], status,
+             f"coverage pre-check {pc['band']}: {'; '.join(pc['reasons'])[:48]}", "document")
+        name = save(img, "error5_screenshot_B", "flattened_screenshot")
+        n += 1; print(f"  [e5]   {status:22} -> {name}")
+    return n
+
+
+def main():
+    tpl = json.load(open(TPL, encoding="utf-8"))
+    total = gallery_e123(tpl) + gallery_e4(tpl) + gallery_e5()
+    print(f"\n{total} annotated images -> {OUT}")
 
 
 if __name__ == "__main__":

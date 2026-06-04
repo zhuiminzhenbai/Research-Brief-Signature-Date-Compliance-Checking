@@ -71,11 +71,22 @@ anchor height. This survives differences in scan resolution and placement.
 | `detect5.py`, `doc_precheck.py` | 5 `PASTED_IMAGE_SIGNATURE` |
 
 ### Visual gallery — `results_gallery/`
-At-a-glance annotated pages produced by `visualize_results.py`: each required
-signature field is boxed and labeled with its verdict (green = SIGNED/PASS,
-red = MISSING/TOO_FAINT, orange = WRONG_BOX, yellow = REVIEW). Covers a missing
-signature, a wrong-box signature, faint cases, and normal signed pages across all
-four form types.
+At-a-glance annotated pages produced by `visualize_results.py`, covering five of
+the six error types:
+
+| Prefix | Shows |
+|--------|-------|
+| `error1_MISSING__*` | Empty required field boxed red → `MISSING` |
+| `error2_WRONGBOX__*` | Signature in the wrong field → `WRONG_BOX` (orange) |
+| `error3_faint__*` | Faint signatures with their Weber band (`REVIEW`/`PASS`) |
+| `error4_typed__*` | Signature field routing: handwriting → `SIGNED`, typed-leaning → `REVIEW` (→VLM) |
+| `error5_pasted_A__*` | Real phone-paste: the pasted **image object** boxed red → `PASTED_IMAGE_SIGNATURE` |
+| `error5_screenshot_B__*` | Real flattened screenshot → `DOC_NOT_SCAN` (document coverage pre-check) |
+| `normal_SIGNED__*` | Genuine signed pages (green `PASS`) for contrast |
+
+Color key: green = SIGNED/PASS, red = MISSING/TOO_FAINT/PASTED, orange =
+WRONG_BOX/DOC_NOT_SCAN, yellow = REVIEW. (Error 6 DATE_UNREADABLE is not yet
+implemented.)
 
 ### Machine-readable results (committed — trimmed to the final artifacts)
 | Path | What it shows |
