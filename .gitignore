@@ -10,6 +10,8 @@
 scanned_sign_pages/
 ocr_cache/
 test_f/
+# error6 skipped; probe image holds real handwritten dates (PII)
+date6_out/
 .DS_Store
 
 # --- Intermediate / local ---

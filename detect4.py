@@ -18,6 +18,7 @@ false-positives, the rest REVIEW (deferred). A real VLM backend resolves REVIEWs
 import os, glob, json, re
 import numpy as np
 import cv2
+import fitz
 import common as C
 from fields_config import FIELDS, DEFAULT_OFFSETS, locate_field, get_fields
 from error4_mask2 import ink_mask_v2, feats
@@ -29,13 +30,22 @@ os.makedirs(CROPS, exist_ok=True)
 TPL = r"C:\Users\25775\Desktop\OCR_research\templates.json"
 
 SIG_INK = 0.012            # cell considered signed (same as detect12)
-PD_TYPED = 0.85            # PaddleOCR read cell content at >= this conf -> typed-leaning
-CCHCV_TYPED = 0.55         # glyph-height CV (recorded only; no longer routes - see below)
-# Routing = OCR confidence alone. If PaddleOCR did NOT read confident content
-# (pd_score < PD_TYPED) the cell is clear handwriting -> auto-pass, no VLM call.
-# Everything legible (typed OR neat handwriting reads confidently) goes to the VLM.
-# (The glyph-height-uniformity signal was dropped: a real typed sample was MORE
-# varied than genuine handwriting, so it only caused false REVIEWs.)
+PD_TYPED = 0.85            # below this OCR conf = clear handwriting -> auto-pass
+PD_TYPED_HARD = 0.99       # >= this = standard-font typed -> local TYPED verdict, no VLM
+NATIVE_PAGE_MAX = 50       # Layer-1 only when whole page has <= this many native words:
+                           # a scan + a few OVERLAID typed words (real samples=4) is a typed
+                           # paste; a full-page text layer (searchable/native PDF, 278-343
+                           # words here) is NOT separable by "field has text" -> use pixels.
+CCHCV_TYPED = 0.55         # glyph-height CV (recorded only; no longer routes)
+# Three-band routing on OCR confidence (the ONLY signal that separates typed from
+# handwriting; cc_h_cv and stroke-width CV both proven non-separable):
+#   pd_score >= 0.99   -> TYPED_SIGNATURE  (2 real standard-font typed samples read
+#                         0.999 & 1.000; all 94 handwritten cells <= 0.980 = clean gap)
+#   0.85 <= pd < 0.99  -> legible but ambiguous -> VLM (REVIEW if no VLM configured)
+#   pd_score < 0.85    -> handwriting -> SIGNED, no VLM call
+# The 0.99 band rests on 2 typed samples: treat as a high-confidence heuristic,
+# validate/tighten with more. cc_h_cv dropped (a real typed sample was MORE height-
+# varied than much genuine handwriting, so it only produced false REVIEWs).
 NA_RE = re.compile(r"^\s*n\.?/?\s*a\.?\s*$", re.I)
 ALPHA = re.compile(r"[A-Za-z]")
 LABEL_WORDS = re.compile(
@@ -48,6 +58,23 @@ LABEL_WORDS = re.compile(
 
 def offsets(tpl, form, field, kind):
     return tpl.get(form, {}).get(field, {}).get(kind) or DEFAULT_OFFSETS[form][kind]
+
+
+def page_words(pdf_path):
+    """Native PDF text words + the render-px scale (long side 2200).
+    A pure scan returns []; a digital/typed PDF returns its text objects.
+    This is error4's deterministic Layer-1 (cf. error5 structural detection)."""
+    doc = fitz.open(pdf_path); pg = doc[0]; R = pg.rect
+    words = pg.get_text("words")           # (x0,y0,x1,y1,word,block,line,wordno) in PDF pt
+    doc.close()
+    return words, 2200 / max(R.width, R.height)
+
+
+def native_in_field(words, scale, abox_px):
+    """Native text words whose center falls inside the signature field (abox in render px)."""
+    pt = [c / scale for c in abox_px]
+    return [w[4] for w in words
+            if pt[0] <= (w[0] + w[2]) / 2 <= pt[2] and pt[1] <= (w[1] + w[3]) / 2 <= pt[3]]
 
 
 def inside(b, B, frac=0.45):
@@ -85,7 +112,10 @@ def process(rel, tpl, use_vlm=True):
     items = cache["items"]; form = C.detect_form(items)
     if form not in FIELDS:
         return {"rel": rel, "form": form, "fields": {}, "note": "no_config"}
-    img = C.render(os.path.join(C.ROOT, rel))
+    pdf_path = os.path.join(C.ROOT, rel)
+    img = C.render(pdf_path)
+    nwords, nscale = page_words(pdf_path)          # Layer-1: native PDF text objects
+    use_native = len(nwords) <= NATIVE_PAGE_MAX    # else searchable/native PDF -> not usable
     base = os.path.basename(rel)
     res = {"rel": rel, "form": form, "fields": {}}
     for fld in get_fields(form, required_only=True):
@@ -95,6 +125,13 @@ def process(rel, tpl, use_vlm=True):
             continue
         abox = C.sig_box_clip_date(sig["box"], dat["box"] if dat else None,
                                    offsets(tpl, form, fld["name"], "sig"))
+        native = native_in_field(nwords, nscale, abox) if use_native else []
+        if native:                                  # overlaid digital text in a scan = typed
+            res["fields"][fld["name"]] = {
+                "status": "TYPED_SIGNATURE", "layer": "pdf-structure",
+                "reason": "native PDF text object in signature field",
+                "native_text": " ".join(native)}
+            continue
         if C.ink_stats(img[abox[1]:abox[3], abox[0]:abox[2]])["ink_ratio"] < SIG_INK:
             continue  # empty -> error1's domain, not error4
         crop, pdtext, pdscore = sig_crop(img, items, abox)
@@ -103,16 +140,13 @@ def process(rel, tpl, use_vlm=True):
                                           "pd": pdtext}
             continue
         fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
-        # cc_h_cv (stroke-height uniformity) was dropped as a routing signal: a real
-        # standard-font typed sample measured cc_h_cv=0.75 -- MORE varied than much
-        # genuine handwriting (0.16-0.49) -- so the uniformity rule never separated
-        # typed from handwriting and only produced false REVIEWs. Standard-font typed
-        # text is caught reliably by high OCR confidence alone. (cc_h_cv still recorded.)
-        typed_evidence = pdscore >= PD_TYPED
         info = {"pd_score": round(pdscore, 3), "pd": pdtext,
                 "cc_h_cv": fe["cc_h_cv"], "band_conc": fe["band_conc"]}
-        if not typed_evidence:
-            info["status"] = "SIGNED"; info["reason"] = "handwriting (no typed evidence)"
+        if pdscore >= PD_TYPED_HARD:
+            info["status"] = "TYPED_SIGNATURE"
+            info["reason"] = f"ocr_conf={pdscore:.3f}>={PD_TYPED_HARD} (standard-font typed)"
+        elif pdscore < PD_TYPED:
+            info["status"] = "SIGNED"; info["reason"] = "handwriting (low ocr conf)"
         elif use_vlm:
             cp = os.path.join(CROPS, f"{base[:24]}__{fld['name']}.png".replace(" ", "_"))
             cv2.imwrite(cp, crop)
@@ -122,7 +156,7 @@ def process(rel, tpl, use_vlm=True):
                 v["label"], "REVIEW")
             info["reason"] = f"vlm={v['label']}"
         else:
-            info["status"] = "REVIEW"; info["reason"] = "typed-candidate (no vlm)"
+            info["status"] = "REVIEW"; info["reason"] = "legible-candidate 0.85<=pd<0.99 (no vlm)"
         res["fields"][fld["name"]] = info
     return res
 

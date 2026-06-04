@@ -8,7 +8,8 @@ import sys, os
 import common as C
 from ocr_cache import render, ocr_page
 from fields_config import FIELDS, DEFAULT_OFFSETS, locate_field, get_fields
-from detect4 import sig_crop, offsets, SIG_INK, PD_TYPED, NA_RE
+from detect4 import (sig_crop, offsets, SIG_INK, PD_TYPED, PD_TYPED_HARD, NA_RE,
+                     page_words, native_in_field, NATIVE_PAGE_MAX)
 from error4_mask2 import ink_mask_v2, feats
 
 TPL_PATH = r"C:\Users\25775\Desktop\OCR_research\templates.json"
@@ -29,15 +30,21 @@ def analyze(pdf_path, ocr):
             print(f"   {fld['name']:14} anchor_not_found"); continue
         abox = C.sig_box_clip_date(sig["box"], dat["box"] if dat else None,
                                    offsets(TPL, form, fld["name"], "sig"))
+        words, scale = page_words(pdf_path)        # Layer-1: native PDF text = typed
+        native = native_in_field(words, scale, abox) if len(words) <= NATIVE_PAGE_MAX else []
+        if native:
+            print(f"   {fld['name']:14} TYPED(pdf-struct)  native={' '.join(native)!r}")
+            continue
         ink = C.ink_stats(img[abox[1]:abox[3], abox[0]:abox[2]])["ink_ratio"]
         if ink < SIG_INK:
             print(f"   {fld['name']:14} EMPTY (ink={ink:.4f})"); continue
         crop, pdtext, pdscore = sig_crop(img, items, abox)
         fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
-        c1 = pdscore >= PD_TYPED                 # routing = OCR confidence only
-        status = "REVIEW->VLM" if c1 else "SIGNED"
-        print(f"   {fld['name']:14} {status:11} pd_score={pdscore:.3f} pd='{pdtext}' "
-              f"cc_h_cv={fe['cc_h_cv']:.3f} (recorded)  trigger=[{'conf' if c1 else 'none'}]")
+        if pdscore >= PD_TYPED_HARD:   status = "TYPED(local)"
+        elif pdscore >= PD_TYPED:      status = "REVIEW->VLM"
+        else:                          status = "SIGNED"
+        print(f"   {fld['name']:14} {status:12} pd_score={pdscore:.3f} pd='{pdtext}' "
+              f"cc_h_cv={fe['cc_h_cv']:.3f} (recorded)")
 
 
 def main():

@@ -15,7 +15,8 @@ from fields_config import DEFAULT_OFFSETS, locate_field, get_fields, FIELDS
 from error2_stray import compute_strays
 from error3_faint import faint_metrics
 from error4_mask2 import ink_mask_v2, feats
-from detect4 import sig_crop, PD_TYPED, NA_RE
+from detect4 import (sig_crop, PD_TYPED, PD_TYPED_HARD, NA_RE,
+                     page_words, native_in_field, NATIVE_PAGE_MAX)
 from detect5 import field_boxes_pt, detect_paste
 from doc_precheck import precheck
 
@@ -69,22 +70,29 @@ def verdict(img, items, form, fld, tpl, strays):
     return box, status, f"weber={w:.2f}"
 
 
-def verdict4(img, items, form, fld, tpl):
-    """error4 routing (no VLM): handwriting -> SIGNED; typed-leaning -> REVIEW (->VLM)."""
+def verdict4(img, items, form, fld, tpl, pdf_path):
+    """error4: Layer-1 native PDF text (typed) -> else OCR-confidence 3-band routing."""
     sig, dat = locate_field(items, fld)
     if sig is None:
         return None, "REVIEW", "anchor_not_found"
     abox = C.sig_box_clip_date(sig["box"], dat["box"] if dat else None,
                                offsets(tpl, form, fld["name"], "sig"))
+    words, scale = page_words(pdf_path)            # Layer-1: overlaid native text = typed
+    if len(words) <= NATIVE_PAGE_MAX:
+        native = native_in_field(words, scale, abox)
+        if native:
+            return abox, "TYPED_SIGNATURE", "native PDF text: " + " ".join(native)
     if C.ink_stats(img[abox[1]:abox[3], abox[0]:abox[2]])["ink_ratio"] < SIG_INK:
         return None, "EMPTY", "error1's domain"
     crop, pdtext, pdscore = sig_crop(img, items, abox)
     if NA_RE.match(pdtext):
         return abox, "NA", "typed N/A"
     fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
-    if pdscore < PD_TYPED:                       # not confidently legible -> handwriting
+    if pdscore >= PD_TYPED_HARD:                 # >=0.99 = standard-font typed
+        return abox, "TYPED_SIGNATURE", f"ocr_conf={pdscore:.3f}"
+    if pdscore < PD_TYPED:                        # not confidently legible -> handwriting
         return abox, "SIGNED", "handwriting"
-    return abox, "REVIEW", "typed-candidate -> VLM"
+    return abox, "REVIEW", "legible -> VLM"
 
 
 def draw(img, box, status, note, name):
@@ -151,7 +159,7 @@ def gallery_e4(tpl):
             continue
         img = C.render(hits[0]); shown = []
         for fld in get_fields(form, required_only=True):
-            box, status, note = verdict4(img, items, form, fld, tpl)
+            box, status, note = verdict4(img, items, form, fld, tpl, hits[0])
             if box is None:
                 continue
             draw(img, box, status, note, fld["name"]); shown.append(status)
@@ -182,11 +190,9 @@ def gallery_typed(tpl):
     form = C.detect_form(items)
     shown = []
     for fld in get_fields(form, required_only=True):
-        box, status, note = verdict4(img, items, form, fld, tpl)
+        box, status, note = verdict4(img, items, form, fld, tpl, f)
         if box is None:
             continue
-        if status == "REVIEW":               # the known typed positive -> show as TYPED
-            status, note = "TYPED_SIGNATURE", note.replace("typed-candidate", "typed")
         draw(img, box, status, note, fld["name"]); shown.append(status)
     name = save(img, "error4_typed_POSITIVE", "typed_name_standard_font")
     print(f"  [e4+]  {'/'.join(shown):18} -> {name}")
