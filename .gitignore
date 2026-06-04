@@ -1,0 +1,16 @@
+# --- Secrets: never commit ---
+*.csv
+
+# --- Real PII: scanned immigration forms (never publish) ---
+/*.pdf
+scanned_sign_pages/
+scanned_sign_pages.zip
+ocr_cache/
+
+# --- Intermediate / local ---
+_archive/
+__pycache__/
+*.pyc
+.claude/
+.vscode/
+.idea/
