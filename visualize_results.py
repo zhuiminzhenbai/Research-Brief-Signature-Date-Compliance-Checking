@@ -88,11 +88,13 @@ def verdict4(img, items, form, fld, tpl, pdf_path):
     if NA_RE.match(pdtext):
         return abox, "NA", "typed N/A"
     fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
-    if pdscore >= PD_TYPED_HARD:                 # >=0.99 = standard-font typed
-        return abox, "TYPED_SIGNATURE", f"ocr_conf={pdscore:.3f}"
+    # pd>=0.99 "typed" heuristic removed: legible handwriting also reads 0.99+ on real data.
+    # TYPED is deterministic (Layer-1 native text) only; legible pixels -> VLM/REVIEW.
     if pdscore < PD_TYPED:                        # not confidently legible -> handwriting
         return abox, "SIGNED", "handwriting"
-    return abox, "REVIEW", "legible -> VLM"
+    # No VLM: legible band is overwhelmingly handwriting and can't be split locally, so
+    # default-pass as SIGNED (a real typed sig here is a silent FN until VLM restores REVIEW).
+    return abox, "SIGNED", "legible, no-vlm default-pass"
 
 
 def draw(img, box, status, note, name):

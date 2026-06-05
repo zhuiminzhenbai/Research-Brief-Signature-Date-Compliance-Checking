@@ -35,6 +35,53 @@ def ocr_page(ocr, img):
             for t, s, b in zip(r["rec_texts"], r["rec_scores"], boxes)]
 
 
+def rotate(img, ang):
+    """Rotate a rendered image by 0/90/180/270 degrees (clockwise)."""
+    import cv2
+    if ang == 90:
+        return cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+    if ang == 180:
+        return cv2.rotate(img, cv2.ROTATE_180)
+    if ang == 270:
+        return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    return img
+
+
+def _sideways(items):
+    """True if most multi-char text lines are taller than wide (page content rotated 90/270)."""
+    multi = [it for it in items if len(it["text"]) >= 4]
+    if not multi:
+        return False
+    vert = sum((it["box"][3]-it["box"][1]) > (it["box"][2]-it["box"][0]) for it in multi)
+    return vert / len(multi) > 0.5
+
+
+def _ori_score(items):
+    multi = [it for it in items if len(it["text"]) >= 4]
+    if not multi:
+        return 0.0
+    horiz = sum((it["box"][2]-it["box"][0]) >= (it["box"][3]-it["box"][1]) for it in multi)
+    mean_s = sum(it["score"] for it in multi) / len(multi)
+    return horiz / len(multi) + mean_s          # prefer horizontal text that also reads confidently
+
+
+def ocr_page_upright(ocr, img0):
+    """OCR with orientation correction. OCRs as-rendered; if the page content is sideways
+    (vertical text lines), re-OCRs at 90/270 and keeps the orientation that reads upright.
+    Returns (items, angle) where angle is the clockwise rotation applied to img0. Detectors
+    must render the page and apply the SAME rotation so boxes and pixels stay aligned."""
+    items = ocr_page(ocr, img0)
+    if not _sideways(items):
+        return items, 0
+    best = (items, 0, _ori_score(items))
+    for ang in (90, 270):
+        it = ocr_page(ocr, rotate(img0, ang))
+        sc = _ori_score(it)
+        if sc > best[2]:
+            best = (it, ang, sc)
+    return best[0], best[1]
+
+
 def cache_path(rel):
     key = hashlib.md5(rel.encode("utf-8")).hexdigest()[:10]
     return os.path.join(CACHE, key + ".json")

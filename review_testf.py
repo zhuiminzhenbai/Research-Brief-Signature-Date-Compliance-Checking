@@ -20,7 +20,7 @@ from collections import Counter
 import fitz
 import cv2
 import common as C
-from ocr_cache import ocr_page
+from ocr_cache import ocr_page, ocr_page_upright, rotate
 from fields_config import locate_field, get_fields, FIELDS
 from error2_stray import compute_strays
 from visualize_results import verdict, verdict4, draw, offsets
@@ -36,7 +36,7 @@ for d in (OUT, OCR_DIR, os.path.join(REV, "error"), os.path.join(REV, "review"))
     os.makedirs(d, exist_ok=True)
 
 HARD = {"MISSING", "WRONG_BOX", "TOO_FAINT", "TYPED_SIGNATURE",
-        "PASTED_IMAGE_SIGNATURE", "DOC_NOT_SCAN"}
+        "PASTED_IMAGE_SIGNATURE"}   # DOC_NOT_SCAN dropped: not a target error type
 
 
 def all_pdfs(root):
@@ -51,11 +51,16 @@ def all_pdfs(root):
 def cached_ocr(ocr, pdf_path, rel):
     cp = os.path.join(OCR_DIR, hashlib.md5(rel.encode("utf-8")).hexdigest()[:10] + ".json")
     if os.path.exists(cp):
-        return json.load(open(cp, encoding="utf-8")), C.render(pdf_path)
-    img = C.render(pdf_path)
-    items = ocr_page(ocr, img)
-    json.dump(items, open(cp, "w", encoding="utf-8"), ensure_ascii=False)
-    return items, img
+        data = json.load(open(cp, encoding="utf-8"))
+        if isinstance(data, list):                       # legacy cache = upright (angle 0)
+            items, rot = data, 0
+        else:
+            items, rot = data["items"], data.get("rot", 0)
+        return items, rotate(C.render(pdf_path), rot)
+    img0 = C.render(pdf_path)
+    items, rot = ocr_page_upright(ocr, img0)             # correct sideways scans
+    json.dump({"items": items, "rot": rot}, open(cp, "w", encoding="utf-8"), ensure_ascii=False)
+    return items, rotate(img0, rot)
 
 
 def boxes_pt(pdf_path, items, form, tpl):
@@ -107,11 +112,10 @@ def process(ocr, pdf_path, tpl):
         if box is not None:
             draws.append((box, st, note, fld["name"]))
 
-    # e5 structural (page-level)
+    # e5 structural (page-level). DOC_NOT_SCAN dropped (not a target error type); only paste.
     try:
         bx, scale = boxes_pt(pdf_path, items, form, tpl)
         hits = detect_paste(pdf_path, bx) if bx else []
-        pc = precheck(pdf_path)
         if hits:
             rec["e5"] = {"verdict": "PASTED_IMAGE_SIGNATURE", "hits": hits}
             pg = fitz.open(pdf_path)[0]
@@ -120,11 +124,6 @@ def process(ocr, pdf_path, tpl):
                 if im:
                     b = [int(v * scale) for v in im["bbox"]]
                     draws.append((b, "PASTED_IMAGE_SIGNATURE", f"dpi={h['dpi']}", h["field"]))
-        elif pc["band"] == "FAIL":
-            rec["e5"] = {"verdict": "DOC_NOT_SCAN", "why": pc["reasons"]}
-            H, W = img.shape[:2]
-            draws.append(([6, 6, W - 6, H - 6], "DOC_NOT_SCAN",
-                          f"cover {pc['cover']:.0%}", "document"))
     except Exception as e:
         rec["e5_err"] = str(e)[:60]
     return rec, img, draws

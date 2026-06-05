@@ -29,6 +29,11 @@ TPL = json.load(open(r"C:\Users\25775\Desktop\OCR_research\templates.json", enco
 PAGE_COVER = 0.6     # an image covering >=60% of the page is the scan itself, not a paste
 TILE_REPEAT = 4      # a (w,h) size appearing >=4 times = a tiling grid (scan background)
 FIELD_PAD = 15       # pt; a pasted signature may sit slightly outside the tight field line
+MIN_W_PT, MIN_H_PT = 25, 6   # a pasted signature is wider than a speck/dot/glyph artifact
+MAX_COVER_PASTE = 0.12       # bigger than this = a page region (half-page photo), not a signature
+DPI_TOL = 0.15               # a real paste's resolution differs from the page scan's (came elsewhere)
+DPI_FAMILY_MIN = 3           # >=3 sub-images sharing one dpi = a systematic OCR/e-sign overlay layer,
+                             # not a lone paste (the real validated paste is a single odd-dpi outlier)
 
 
 def field_boxes_pt(pdf_path, rel_for_cache):
@@ -52,38 +57,76 @@ def field_boxes_pt(pdf_path, rel_for_cache):
     return form, boxes
 
 
+def _img_dpi(im):
+    w = im["bbox"][2] - im["bbox"][0]
+    return im["width"] / (w / 72) if w else 0.0
+
+
 def detect_paste(pdf_path, boxes_pt):
-    """Layer-1: return pasted-image hits (separate non-artifact image in a signature field)."""
-    pg = fitz.open(pdf_path)[0]; R = pg.rect
-    imgs = [im for im in pg.get_image_info(xrefs=True) if im["width"] > 4 and im["height"] > 4]
+    """Layer-1: a pasted signature = a separate image object in a signature field that is
+    signature-sized, NOT page-covering / tiling, and bears a structural paste tell:
+      (A) ALPHA — the image has a soft mask / transparency. Cut-out signatures keep a
+          transparent background so they don't occlude the form; genuine scans are opaque.
+          This is the strongest deterministic tell (fires even when dpi matches the page).
+      (B) DPI MISMATCH — an opaque image whose resolution differs from the page scan and is
+          NOT part of a same-dpi overlay FAMILY (>=3, = OCR/e-sign assembly layer, not a paste).
+    Both are read from the PDF object table; no rendering."""
+    doc = fitz.open(pdf_path); pg = doc[0]; R = pg.rect
+    page_area = R.width * R.height
+    smask_of = {im[0]: im[1] for im in pg.get_images(full=True)}   # xref -> soft-mask xref (0 = opaque)
+    imgs = [im for im in pg.get_image_info(xrefs=True) if im["width"] > 1 and im["height"] > 1]
+    if not imgs:
+        doc.close(); return []
+    page_dpi = _img_dpi(max(imgs, key=lambda im: (im["bbox"][2]-im["bbox"][0])*(im["bbox"][3]-im["bbox"][1])))
     sizes = Counter((round(im["bbox"][2]-im["bbox"][0]), round(im["bbox"][3]-im["bbox"][1])) for im in imgs)
+    dpi_hist = Counter()                                       # dpi family of the non-page sub-images
+    for im in imgs:
+        b = im["bbox"]
+        if ((b[2]-b[0])*(b[3]-b[1]))/page_area < PAGE_COVER:
+            dpi_hist[round(_img_dpi(im)/25)*25] += 1
     hits = []
     for im in imgs:
         b = im["bbox"]; w, h = b[2]-b[0], b[3]-b[1]
-        cov = (w*h) / (R.width*R.height)
-        if cov >= PAGE_COVER:                       # the page scan itself
+        cov = (w*h) / page_area
+        dpi = _img_dpi(im)
+        if cov >= PAGE_COVER:                                  # the page scan itself
             continue
-        if sizes[(round(w), round(h))] >= TILE_REPEAT:   # tiling grid (CamScanner)
+        if sizes[(round(w), round(h))] >= TILE_REPEAT:         # tiling grid (CamScanner)
+            continue
+        if w < MIN_W_PT or h < MIN_H_PT:                       # speck / dot / glyph artifact
+            continue
+        if cov >= MAX_COVER_PASTE:                             # a page region, not a signature
             continue
         cx, cy = (b[0]+b[2])/2, (b[1]+b[3])/2
         field = next((k for k, f in boxes_pt.items()
                       if f[0]-FIELD_PAD <= cx <= f[2]+FIELD_PAD and f[1]-FIELD_PAD <= cy <= f[3]+FIELD_PAD), None)
-        if field:
-            dpi = im["width"] / (w/72) if w else 0
-            hits.append({"xref": im["xref"], "field": field, "dpi": round(dpi),
-                         "place": f"{w:.0f}x{h:.0f}pt", "cover": round(cov, 3)})
+        if not field:
+            continue
+        has_alpha = smask_of.get(im["xref"], 0) != 0
+        dpi_off = bool(page_dpi) and abs(dpi - page_dpi) / page_dpi >= DPI_TOL
+        family = dpi_hist[round(dpi/25)*25] >= DPI_FAMILY_MIN
+        if has_alpha:
+            tell = "alpha/transparency (overlay, not a scan)"
+        elif dpi_off and not family:
+            tell = f"dpi {round(dpi)} != page {round(page_dpi)}"
+        else:
+            continue
+        hits.append({"xref": im["xref"], "field": field, "dpi": round(dpi),
+                     "place": f"{w:.0f}x{h:.0f}pt", "cover": round(cov, 3),
+                     "page_dpi": round(page_dpi), "smask": smask_of.get(im["xref"], 0),
+                     "tell": tell})
+    doc.close()
     return hits
 
 
 def error5(pdf_path, rel_for_cache):
+    # DOC_NOT_SCAN (doc-level authenticity) was dropped: it is not a target error type and
+    # over-fired on native/segmented PDFs. error5 now reports only the pasted-image signature.
     form, boxes = field_boxes_pt(pdf_path, rel_for_cache)
     hits = detect_paste(pdf_path, boxes) if boxes else []
-    pc = precheck(pdf_path)
     if hits:
-        return {"verdict": "PASTED_IMAGE_SIGNATURE", "hits": hits, "precheck": pc["band"]}
-    if pc["band"] == "FAIL":
-        return {"verdict": "DOC_NOT_SCAN", "hits": [], "precheck": pc["band"], "why": pc["reasons"]}
-    return {"verdict": "OK", "hits": [], "precheck": pc["band"]}
+        return {"verdict": "PASTED_IMAGE_SIGNATURE", "hits": hits}
+    return {"verdict": "OK", "hits": []}
 
 
 def main():
@@ -106,14 +149,7 @@ def main():
     twin = r"need_correction\G-28 Page 3\100394_Form G-28 Page 3_NG (not signed).pdf"
     if paste:
         r = error5(paste[0], twin)
-        print(f"  phone-paste (A): {r['verdict']}  hits={r['hits']}  precheck={r['precheck']}")
-    # screenshot (Type B): different layout, no twin geometry -> rely on doc-precheck
-    shot = glob.glob(os.path.join(PROJ, "184467*.pdf"))
-    if shot:
-        pc = precheck(shot[0])
-        layer1 = "blind (signature baked in, no separate object)"
-        print(f"  screenshot (B):  Layer-1 {layer1}; doc-precheck={pc['band']} ({'; '.join(pc['reasons'])})")
-        print(f"                   verdict = {'DOC_NOT_SCAN' if pc['band']=='FAIL' else 'OK'}")
+        print(f"  phone-paste (A): {r['verdict']}  hits={r['hits']}")
 
 
 if __name__ == "__main__":

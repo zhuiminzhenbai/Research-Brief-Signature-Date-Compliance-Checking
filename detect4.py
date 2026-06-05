@@ -37,15 +37,21 @@ NATIVE_PAGE_MAX = 50       # Layer-1 only when whole page has <= this many nativ
                            # paste; a full-page text layer (searchable/native PDF, 278-343
                            # words here) is NOT separable by "field has text" -> use pixels.
 CCHCV_TYPED = 0.55         # glyph-height CV (recorded only; no longer routes)
-# Three-band routing on OCR confidence (the ONLY signal that separates typed from
-# handwriting; cc_h_cv and stroke-width CV both proven non-separable):
-#   pd_score >= 0.99   -> TYPED_SIGNATURE  (2 real standard-font typed samples read
-#                         0.999 & 1.000; all 94 handwritten cells <= 0.980 = clean gap)
-#   0.85 <= pd < 0.99  -> legible but ambiguous -> VLM (REVIEW if no VLM configured)
+VEC_GLYPH_MIN = 8          # >= this many glyph-sized VECTOR fills in a field (on a scan-like
+                           # page) = text drawn as outlines/curves = typed/outlined signature.
+                           # 0 on every genuine scan AND on the 2 typed-as-text samples tested
+                           # (those are text objects, caught by Layer-1 text). No outlined-text
+                           # positive exists yet -> recall UNVALIDATED, but FP-safe (scans = 0);
+                           # this is the deterministic catch IF an outlined-text evasion appears.
+# Routing. The DETERMINISTIC typed signal is Layer-1 (a native PDF text object in the
+# field, handled above) — that is the ONLY thing that yields a local TYPED verdict.
+# OCR confidence does NOT separate typed from handwriting on real data: the pd>=0.99
+# heuristic (calibrated on 2 typed + 94 handwritten samples) FALSE-fired on legible
+# handwritten names in the 400+ test set (neat cursive names also read 0.99+),
+# so it was removed. cc_h_cv and stroke-width CV are likewise non-separable. Pixel/OCR
+# routing therefore only AUTO-CLEARS clear handwriting; anything legible goes to the VLM:
 #   pd_score < 0.85    -> handwriting -> SIGNED, no VLM call
-# The 0.99 band rests on 2 typed samples: treat as a high-confidence heuristic,
-# validate/tighten with more. cc_h_cv dropped (a real typed sample was MORE height-
-# varied than much genuine handwriting, so it only produced false REVIEWs).
+#   pd_score >= 0.85   -> legible but ambiguous -> VLM (REVIEW if no VLM configured)
 NA_RE = re.compile(r"^\s*n\.?/?\s*a\.?\s*$", re.I)
 ALPHA = re.compile(r"[A-Za-z]")
 LABEL_WORDS = re.compile(
@@ -75,6 +81,28 @@ def native_in_field(words, scale, abox_px):
     pt = [c / scale for c in abox_px]
     return [w[4] for w in words
             if pt[0] <= (w[0] + w[2]) / 2 <= pt[2] and pt[1] <= (w[1] + w[3]) / 2 <= pt[3]]
+
+
+def page_glyph_fills(pdf_path):
+    """Glyph-sized VECTOR fill rectangles (PDF pt) — text drawn as outlines/curves, which
+    get_text() can't see. Excludes large shapes (form boxes/lines). A raster scan has none."""
+    doc = fitz.open(pdf_path); pg = doc[0]
+    rects = []
+    for d in pg.get_drawings():
+        if d.get("fill") is None:                  # only filled paths (glyph bodies), not strokes
+            continue
+        r = d["rect"]; w, h = r.width, r.height
+        if 1 <= w <= 40 and 1 <= h <= 40:          # glyph-sized (not the field box / page rules)
+            rects.append((r.x0, r.y0, r.x1, r.y1))
+    doc.close()
+    return rects
+
+
+def vector_glyphs_in_field(rects, scale, abox_px):
+    """Count glyph-sized vector fills whose center is inside the signature field."""
+    pt = [c / scale for c in abox_px]
+    return sum(1 for x0, y0, x1, y1 in rects
+               if pt[0] <= (x0 + x1) / 2 <= pt[2] and pt[1] <= (y0 + y1) / 2 <= pt[3])
 
 
 def inside(b, B, frac=0.45):
@@ -114,8 +142,9 @@ def process(rel, tpl, use_vlm=True):
         return {"rel": rel, "form": form, "fields": {}, "note": "no_config"}
     pdf_path = os.path.join(C.ROOT, rel)
     img = C.render(pdf_path)
-    nwords, nscale = page_words(pdf_path)          # Layer-1: native PDF text objects
+    nwords, nscale = page_words(pdf_path)          # Layer-1a: native PDF text objects
     use_native = len(nwords) <= NATIVE_PAGE_MAX    # else searchable/native PDF -> not usable
+    glyph_fills = page_glyph_fills(pdf_path)       # Layer-1b: text drawn as vector outlines
     base = os.path.basename(rel)
     res = {"rel": rel, "form": form, "fields": {}}
     for fld in get_fields(form, required_only=True):
@@ -128,9 +157,15 @@ def process(rel, tpl, use_vlm=True):
         native = native_in_field(nwords, nscale, abox) if use_native else []
         if native:                                  # overlaid digital text in a scan = typed
             res["fields"][fld["name"]] = {
-                "status": "TYPED_SIGNATURE", "layer": "pdf-structure",
+                "status": "TYPED_SIGNATURE", "layer": "pdf-text",
                 "reason": "native PDF text object in signature field",
                 "native_text": " ".join(native)}
+            continue
+        nglyph = vector_glyphs_in_field(glyph_fills, nscale, abox) if use_native else 0
+        if nglyph >= VEC_GLYPH_MIN:                 # text drawn as vector outlines = typed
+            res["fields"][fld["name"]] = {
+                "status": "TYPED_SIGNATURE", "layer": "pdf-vector",
+                "reason": f"{nglyph} glyph-sized vector fills in field (outlined typed text)"}
             continue
         if C.ink_stats(img[abox[1]:abox[3], abox[0]:abox[2]])["ink_ratio"] < SIG_INK:
             continue  # empty -> error1's domain, not error4
@@ -142,10 +177,7 @@ def process(rel, tpl, use_vlm=True):
         fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
         info = {"pd_score": round(pdscore, 3), "pd": pdtext,
                 "cc_h_cv": fe["cc_h_cv"], "band_conc": fe["band_conc"]}
-        if pdscore >= PD_TYPED_HARD:
-            info["status"] = "TYPED_SIGNATURE"
-            info["reason"] = f"ocr_conf={pdscore:.3f}>={PD_TYPED_HARD} (standard-font typed)"
-        elif pdscore < PD_TYPED:
+        if pdscore < PD_TYPED:
             info["status"] = "SIGNED"; info["reason"] = "handwriting (low ocr conf)"
         elif use_vlm:
             cp = os.path.join(CROPS, f"{base[:24]}__{fld['name']}.png".replace(" ", "_"))
@@ -156,7 +188,11 @@ def process(rel, tpl, use_vlm=True):
                 v["label"], "REVIEW")
             info["reason"] = f"vlm={v['label']}"
         else:
-            info["status"] = "REVIEW"; info["reason"] = "legible-candidate 0.85<=pd<0.99 (no vlm)"
+            # No VLM configured: legible signatures can't be split typed-vs-handwriting
+            # locally (proven non-separable), and they are overwhelmingly handwriting, so
+            # DEFAULT-PASS them as SIGNED. Trade-off: a genuine typed signature in this band
+            # is silently passed (false negative) until a VLM is wired -> then restore REVIEW.
+            info["status"] = "SIGNED"; info["reason"] = "legible, no-vlm default-pass (handwriting assumed)"
         res["fields"][fld["name"]] = info
     return res
 

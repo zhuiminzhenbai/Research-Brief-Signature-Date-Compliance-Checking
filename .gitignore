@@ -19,8 +19,12 @@ results_gallery/
 error5_out/
 testf_out/
 testf_review/
-testf_out_log.txt
-review_testf_log.txt
+testf_evidence/
+testf_out_log*.txt
+review_testf_log*.txt
+
+# --- Signature crops (PII) ---
+detect4_out/crops/
 
 # --- Intermediate / local ---
 _archive/
