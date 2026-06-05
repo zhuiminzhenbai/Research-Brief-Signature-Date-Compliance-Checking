@@ -70,24 +70,11 @@ anchor height. This survives differences in scan resolution and placement.
 | `detect4.py`, `error4_mask2.py` | 4 `TYPED_SIGNATURE` (OCR pre-filter → VLM) |
 | `detect5.py`, `doc_precheck.py` | 5 `PASTED_IMAGE_SIGNATURE` |
 
-### Visual gallery — `results_gallery/`
-At-a-glance annotated pages produced by `visualize_results.py`, covering five of
-the six error types:
-
-| Prefix | Shows |
-|--------|-------|
-| `error1_MISSING__*` | Empty required field boxed red → `MISSING` |
-| `error2_WRONGBOX__*` | Signature in the wrong field → `WRONG_BOX` (orange) |
-| `error3_faint__*` | Faint signatures with their Weber band (`REVIEW`/`PASS`) |
-| `error4_typed__*` | Signature field routing: handwriting → `SIGNED`, confidently-legible → `REVIEW` (→VLM) |
-| `error4_typed_POSITIVE__*` | A real typed name (standard font) caught → `TYPED_SIGNATURE` |
-| `error5_pasted_A__*` | Real phone-paste: the pasted **image object** boxed red → `PASTED_IMAGE_SIGNATURE` |
-| `error5_screenshot_B__*` | Real flattened screenshot → `DOC_NOT_SCAN` (document coverage pre-check) |
-| `normal_SIGNED__*` | Genuine signed pages (green `PASS`) for contrast |
-
-Color key: green = SIGNED/PASS, red = MISSING/TOO_FAINT/PASTED, orange =
-WRONG_BOX/DOC_NOT_SCAN, yellow = REVIEW. (Error 6 DATE_UNREADABLE is not yet
-implemented.)
+### Visual gallery — `results_gallery/` (local only)
+`visualize_results.py` produces at-a-glance annotated pages (field box + verdict)
+for five of the six error types. Because these are renders of **real immigration
+form pages (PII)**, they are kept **local only** and are not committed — run the
+script to regenerate them. (Error 6 DATE_UNREADABLE is not yet implemented.)
 
 ### Machine-readable results (committed — trimmed to the final artifacts)
 | Path | What it shows |
@@ -96,8 +83,6 @@ implemented.)
 | `detect3_out/detect3.json` | Error 3 full run (Weber bands: 93 PASS / 7 REVIEW / 0 FAIL) |
 | `detect4_out/detect4.json` | Error 4 full run (OCR pre-filter → VLM candidates) |
 | `faint_out/synth_ladder_grid.png` | Error 3 synthetic dimming ladder (FAIL-side validation) |
-| `error5_out/user_pasted_zoom.png` | Error 5 — real pasted-image signature (type A, structurally caught) |
-| `error5_out/screenshot_marked.png` | Error 5 — real flattened screenshot (type B, caught by document coverage pre-check) |
 
 ---
 

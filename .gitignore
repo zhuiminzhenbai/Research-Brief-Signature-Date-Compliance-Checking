@@ -14,6 +14,10 @@ test_f/
 date6_out/
 .DS_Store
 
+# --- Rendered document images: real form pages (PII) — keep local, never upload ---
+results_gallery/
+error5_out/
+
 # --- Intermediate / local ---
 _archive/
 __pycache__/
