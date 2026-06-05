@@ -17,6 +17,10 @@ date6_out/
 # --- Rendered document images: real form pages (PII) — keep local, never upload ---
 results_gallery/
 error5_out/
+testf_out/
+testf_review/
+testf_out_log.txt
+review_testf_log.txt
 
 # --- Intermediate / local ---
 _archive/
