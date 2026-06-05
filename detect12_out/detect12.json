@@ -1,0 +1,1117 @@
+[
+  {
+    "rel": "sample_001__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03126,
+        "cc": 6
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03402,
+        "cc": 6
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_004__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02623,
+        "cc": 10
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04694,
+        "cc": 6
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_009__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03443,
+        "cc": 9
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06311,
+        "cc": 17
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_012__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02268,
+        "cc": 6
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03519,
+        "cc": 5
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_013__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02734,
+        "cc": 5
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.0207,
+        "cc": 11
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_016__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.01883,
+        "cc": 7
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02222,
+        "cc": 4
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_017__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03547,
+        "cc": 6
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02185,
+        "cc": 11
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_019__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03992,
+        "cc": 12
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.053,
+        "cc": 8
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_021__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02138,
+        "cc": 11
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04492,
+        "cc": 24
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_022__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02804,
+        "cc": 8
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03489,
+        "cc": 5
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_028__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.01935,
+        "cc": 7
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04242,
+        "cc": 6
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_001__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04275,
+        "cc": 9
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.052,
+        "cc": 12
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_002__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.07421,
+        "cc": 9
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.07195,
+        "cc": 23
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_003__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.05129,
+        "cc": 9
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06155,
+        "cc": 11
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_004__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.07254,
+        "cc": 7
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04593,
+        "cc": 21
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_012__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06392,
+        "cc": 10
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04081,
+        "cc": 10
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_013__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02093,
+        "cc": 9
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06707,
+        "cc": 6
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_015__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.1021,
+        "cc": 10
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03377,
+        "cc": 8
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_016__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02198,
+        "cc": 7
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03078,
+        "cc": 14
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_017__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02495,
+        "cc": 8
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.0724,
+        "cc": 12
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_019__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.0786,
+        "cc": 9
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06575,
+        "cc": 3
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_020__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.07812,
+        "cc": 12
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03028,
+        "cc": 16
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_028__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.05818,
+        "cc": 13
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04821,
+        "cc": 12
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_001__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.05083,
+        "cc": 7
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_002__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.07574,
+        "cc": 36
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_003__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04523,
+        "cc": 14
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_004__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03722,
+        "cc": 15
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_007__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03069,
+        "cc": 8
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_011__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.05783,
+        "cc": 24
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_013__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.0449,
+        "cc": 16
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_015__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03804,
+        "cc": 14
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_016__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.0594,
+        "cc": 16
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_017__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06254,
+        "cc": 42
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_018__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04319,
+        "cc": 7
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_019__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.05902,
+        "cc": 32
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_020__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03338,
+        "cc": 24
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_021__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03156,
+        "cc": 14
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_022__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.01152,
+        "cc": 7
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_028__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.07062,
+        "cc": 5
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_002__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06286,
+        "cc": 12
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_007__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.05942,
+        "cc": 13
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_015__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.05097,
+        "cc": 3
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_018__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04215,
+        "cc": 3
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_019__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.10577,
+        "cc": 19
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_020__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03006,
+        "cc": 13
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_021__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06243,
+        "cc": 5
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_001__ETA-9089__NG",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "MISSING",
+        "reason": "empty",
+        "ink": 0.00505,
+        "cc": 2
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.0411,
+        "cc": 6
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_005__ETA-9089__NG",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02563,
+        "cc": 9
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02851,
+        "cc": 11
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_010__ETA-9089__NG",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.07695,
+        "cc": 11
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04058,
+        "cc": 5
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_026__ETA-9089__NG",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02248,
+        "cc": 11
+      },
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.0443,
+        "cc": 11
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_001__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06236,
+        "cc": 12
+      },
+      "client": {
+        "status": "MISSING",
+        "reason": "empty",
+        "ink": 0.00207,
+        "cc": 3
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_005__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      },
+      "client": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_010__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      },
+      "client": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_014__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.0542,
+        "cc": 22
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_024__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02431,
+        "cc": 3
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03338,
+        "cc": 17
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_026__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04687,
+        "cc": 10
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.08348,
+        "cc": 12
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_027__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.02406,
+        "cc": 15
+      },
+      "client": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04783,
+        "cc": 14
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_001__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "MISSING",
+        "reason": "empty",
+        "ink": 0.00872,
+        "cc": 1
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_006__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.06615,
+        "cc": 45
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_008__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.08025,
+        "cc": 22
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_009__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03836,
+        "cc": 10
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_010__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.09943,
+        "cc": 50
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_011__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.05834,
+        "cc": 19
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_014__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.09736,
+        "cc": 40
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_021__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03339,
+        "cc": 11
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_025__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "WRONG_BOX",
+        "reason": "stray_sig@[1023, 1459]",
+        "ink": 0.00894,
+        "cc": 1
+      }
+    },
+    "n_stray": 1
+  },
+  {
+    "rel": "sample_029__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03305,
+        "cc": 33
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_014__I-140-P8__NG",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.07897,
+        "cc": 10
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_021__I-140-P8__NG",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      }
+    },
+    "n_stray": 0
+  },
+  {
+    "rel": "sample_023__I-140-P8__NG",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.04224,
+        "cc": 8
+      }
+    },
+    "n_stray": 1
+  },
+  {
+    "rel": "sample_024__I-140-P8__NG",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "SIGNED",
+        "reason": "ink_present",
+        "ink": 0.03309,
+        "cc": 7
+      }
+    },
+    "n_stray": 0
+  }
+]

@@ -1,0 +1,1107 @@
+[
+  {
+    "rel": "sample_001__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.065,
+        "band_conc": 0.62,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.488,
+        "band_conc": 0.601,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_004__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": 0.98,
+        "cc_h_cv": 0.333,
+        "band_conc": 0.828,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.482,
+        "band_conc": 0.841,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_009__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": 0.701,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.946,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.625,
+        "band_conc": 0.811,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_012__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.295,
+        "band_conc": 0.536,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.374,
+        "band_conc": 0.74,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_013__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.675,
+        "band_conc": 0.767,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.666,
+        "band_conc": 0.683,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_016__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.123,
+        "band_conc": 0.754,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.752,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_017__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.711,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.719,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_019__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": 0.662,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.786,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.349,
+        "band_conc": 0.596,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_021__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.01,
+        "band_conc": 0.589,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": 0.78,
+        "cc_h_cv": 1.313,
+        "band_conc": 0.881,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_022__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.875,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.463,
+        "band_conc": 0.687,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_028__ETA-9089__Good",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.546,
+        "band_conc": 0.616,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.219,
+        "band_conc": 0.804,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_001__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.488,
+        "cc_h_cv": 1.313,
+        "band_conc": 0.617,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.531,
+        "cc_h_cv": 1.074,
+        "band_conc": 0.757,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_002__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.089,
+        "band_conc": 0.696,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.574,
+        "cc_h_cv": 0.925,
+        "band_conc": 0.796,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_003__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.967,
+        "cc_h_cv": 1.545,
+        "band_conc": 0.641,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      },
+      "client": {
+        "pd_score": 0.393,
+        "cc_h_cv": 1.205,
+        "band_conc": 0.594,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_004__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.681,
+        "cc_h_cv": 1.373,
+        "band_conc": 0.744,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.964,
+        "cc_h_cv": 0.357,
+        "band_conc": 0.89,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      }
+    }
+  },
+  {
+    "rel": "sample_012__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.671,
+        "band_conc": 0.691,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.976,
+        "band_conc": 0.836,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_013__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.862,
+        "cc_h_cv": 0.625,
+        "band_conc": 0.931,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      },
+      "client": {
+        "pd_score": 0.769,
+        "cc_h_cv": 0.736,
+        "band_conc": 0.608,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_015__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.515,
+        "cc_h_cv": 1.369,
+        "band_conc": 0.679,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.752,
+        "cc_h_cv": 1.279,
+        "band_conc": 0.689,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_016__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.573,
+        "band_conc": 0.625,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.615,
+        "cc_h_cv": 0.709,
+        "band_conc": 0.774,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_017__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.608,
+        "cc_h_cv": 0.162,
+        "band_conc": 0.863,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.77,
+        "cc_h_cv": 1.411,
+        "band_conc": 0.624,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_019__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.658,
+        "band_conc": 0.607,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.577,
+        "cc_h_cv": 1.684,
+        "band_conc": 0.747,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_020__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.713,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.783,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.856,
+        "cc_h_cv": 1.09,
+        "band_conc": 0.608,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      }
+    }
+  },
+  {
+    "rel": "sample_028__G-28-P3__Good",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.533,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.817,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.172,
+        "band_conc": 0.512,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_001__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.743,
+        "cc_h_cv": 1.214,
+        "band_conc": 0.664,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_002__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.547,
+        "cc_h_cv": 1.375,
+        "band_conc": 0.661,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_003__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.248,
+        "band_conc": 0.544,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_004__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.923,
+        "cc_h_cv": 0.545,
+        "band_conc": 0.873,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      }
+    }
+  },
+  {
+    "rel": "sample_007__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.8,
+        "cc_h_cv": 1.249,
+        "band_conc": 0.663,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_011__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.954,
+        "cc_h_cv": 0.894,
+        "band_conc": 0.568,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      }
+    }
+  },
+  {
+    "rel": "sample_013__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.677,
+        "cc_h_cv": 1.253,
+        "band_conc": 0.699,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_015__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.656,
+        "cc_h_cv": 1.439,
+        "band_conc": 0.674,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_016__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.794,
+        "band_conc": 0.546,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_017__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.475,
+        "band_conc": 0.54,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_018__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.801,
+        "cc_h_cv": 1.372,
+        "band_conc": 0.691,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_019__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.791,
+        "cc_h_cv": 1.569,
+        "band_conc": 0.712,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_020__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.87,
+        "cc_h_cv": 0.952,
+        "band_conc": 0.54,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      }
+    }
+  },
+  {
+    "rel": "sample_021__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.725,
+        "cc_h_cv": 0.553,
+        "band_conc": 0.779,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_022__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {}
+  },
+  {
+    "rel": "sample_028__I-140-P6__Good",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.115,
+        "band_conc": 0.577,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_002__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.202,
+        "band_conc": 0.799,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_007__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": 0.782,
+        "cc_h_cv": 0.873,
+        "band_conc": 0.834,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_015__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": 0.555,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.857,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_018__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.0,
+        "band_conc": 1.0,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_019__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.661,
+        "band_conc": 0.753,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_020__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": 0.894,
+        "cc_h_cv": 0.585,
+        "band_conc": 0.695,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      }
+    }
+  },
+  {
+    "rel": "sample_021__I-140-P8__Good",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": 0.962,
+        "cc_h_cv": 0.534,
+        "band_conc": 0.788,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      }
+    }
+  },
+  {
+    "rel": "sample_001__ETA-9089__NG",
+    "form": "ETA-9089",
+    "fields": {
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.688,
+        "band_conc": 0.512,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_005__ETA-9089__NG",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": 0.718,
+        "cc_h_cv": 0.557,
+        "band_conc": 0.84,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 2.039,
+        "band_conc": 0.568,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_010__ETA-9089__NG",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": 0.799,
+        "cc_h_cv": 0.423,
+        "band_conc": 0.786,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.724,
+        "band_conc": 0.715,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_026__ETA-9089__NG",
+    "form": "ETA-9089",
+    "fields": {
+      "foreign_worker": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.61,
+        "band_conc": 0.737,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "attorney": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.577,
+        "band_conc": 0.584,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_001__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.637,
+        "cc_h_cv": 0.88,
+        "band_conc": 0.593,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_005__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      },
+      "client": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      }
+    }
+  },
+  {
+    "rel": "sample_010__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      },
+      "client": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      }
+    }
+  },
+  {
+    "rel": "sample_014__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      },
+      "client": {
+        "pd_score": 0.805,
+        "cc_h_cv": 1.459,
+        "band_conc": 0.585,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_024__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.714,
+        "cc_h_cv": 1.0,
+        "band_conc": 0.826,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.734,
+        "cc_h_cv": 0.617,
+        "band_conc": 0.819,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_026__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.426,
+        "cc_h_cv": 0.488,
+        "band_conc": 0.785,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.812,
+        "cc_h_cv": 0.902,
+        "band_conc": 0.563,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_027__G-28-P3__NG",
+    "form": "G-28 P3",
+    "fields": {
+      "attorney": {
+        "pd_score": 0.743,
+        "cc_h_cv": 1.178,
+        "band_conc": 0.61,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      },
+      "client": {
+        "pd_score": 0.406,
+        "cc_h_cv": 1.073,
+        "band_conc": 0.643,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_001__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {}
+  },
+  {
+    "rel": "sample_006__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.59,
+        "cc_h_cv": 1.558,
+        "band_conc": 0.759,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_008__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.543,
+        "cc_h_cv": 0.569,
+        "band_conc": 0.728,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_009__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.733,
+        "cc_h_cv": 1.275,
+        "band_conc": 0.681,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_010__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.784,
+        "cc_h_cv": 1.438,
+        "band_conc": 0.66,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_011__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": -1.0,
+        "cc_h_cv": 0.991,
+        "band_conc": 0.682,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_014__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.826,
+        "cc_h_cv": 1.362,
+        "band_conc": 0.508,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_021__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": 0.838,
+        "cc_h_cv": 1.319,
+        "band_conc": 0.635,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_025__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {}
+  },
+  {
+    "rel": "sample_029__I-140-P6__NG",
+    "form": "I-140 P6",
+    "fields": {
+      "petitioner": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.087,
+        "band_conc": 0.611,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_014__I-140-P8__NG",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": 0.855,
+        "cc_h_cv": 1.379,
+        "band_conc": 0.634,
+        "status": "REVIEW",
+        "reason": "legible-candidate 0.85<=pd<0.99 (no vlm)"
+      }
+    }
+  },
+  {
+    "rel": "sample_021__I-140-P8__NG",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "status": "REVIEW",
+        "reason": "anchor_not_found"
+      }
+    }
+  },
+  {
+    "rel": "sample_023__I-140-P8__NG",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": -1.0,
+        "cc_h_cv": 1.0,
+        "band_conc": 1.0,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  },
+  {
+    "rel": "sample_024__I-140-P8__NG",
+    "form": "I-140 P8",
+    "fields": {
+      "signatory": {
+        "pd_score": 0.678,
+        "cc_h_cv": 1.109,
+        "band_conc": 0.882,
+        "status": "SIGNED",
+        "reason": "handwriting (low ocr conf)"
+      }
+    }
+  }
+]

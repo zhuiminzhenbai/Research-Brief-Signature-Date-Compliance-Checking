@@ -1,0 +1,15 @@
+{
+  "_note": "Field-level ground truth for the 4 NG positives relevant to error1/error2. All other files: every required field = SIGNED. Status per field: SIGNED | MISSING | WRONG_BOX.",
+  "sample_001__I-140-Page-6__NG": {
+    "petitioner": "MISSING"
+  },
+  "sample_001__G-28-Page-3__NG": {
+    "client": "MISSING"
+  },
+  "sample_001__ETA-9089__NG": {
+    "foreign_worker": "MISSING"
+  },
+  "sample_025__I-140-Page-6__NG": {
+    "petitioner": "WRONG_BOX"
+  }
+}
