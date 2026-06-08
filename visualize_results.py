@@ -17,6 +17,24 @@ from error3_faint import faint_metrics
 from error4_mask2 import ink_mask_v2, feats
 from detect4 import (sig_crop, PD_TYPED, PD_TYPED_HARD, NA_RE,
                      page_words, native_in_field, NATIVE_PAGE_MAX)
+from error4_fontmatch import font_score, TF as FONT_TF
+import tempfile
+import vlm_classify
+
+
+def _vlm_label(crop):
+    """Save the crop to a temp PNG and ask the configured VLM. With no VLM backend
+    set (default 'stub'), returns 'uncertain' -> REVIEW and nothing leaves the machine."""
+    fd, p = tempfile.mkstemp(suffix=".png")
+    os.close(fd)
+    try:
+        cv2.imwrite(p, crop)
+        return vlm_classify.classify(p)["label"]
+    finally:
+        try:
+            os.remove(p)
+        except OSError:
+            pass
 from detect5 import field_boxes_pt, detect_paste
 from doc_precheck import precheck
 
@@ -87,14 +105,22 @@ def verdict4(img, items, form, fld, tpl, pdf_path):
     crop, pdtext, pdscore = sig_crop(img, items, abox)
     if NA_RE.match(pdtext):
         return abox, "NA", "typed N/A"
-    fe = feats(crop, ink_mask_v2) or {"cc_h_cv": 1.0, "band_conc": 0.0}
-    # pd>=0.99 "typed" heuristic removed: legible handwriting also reads 0.99+ on real data.
-    # TYPED is deterministic (Layer-1 native text) only; legible pixels -> VLM/REVIEW.
-    if pdscore < PD_TYPED:                        # not confidently legible -> handwriting
-        return abox, "SIGNED", "handwriting"
-    # No VLM: legible band is overwhelmingly handwriting and can't be split locally, so
-    # default-pass as SIGNED (a real typed sig here is a silent FN until VLM restores REVIEW).
-    return abox, "SIGNED", "legible, no-vlm default-pass"
+    if pdscore < PD_TYPED:                        # cheap gate: low OCR conf = handwriting
+        return abox, "SIGNED", "handwriting (low ocr conf)"
+    # Layer-2 PREFILTER: font-template match selects typed-candidates. font-match alone
+    # CANNOT decide (neat hand-printing scores in the typed band too), so it only narrows
+    # who needs the VLM. Below the bar -> clearly not a standard font.
+    fs = font_score(crop, pdtext)
+    if fs < FONT_TF:
+        return abox, "SIGNED", f"handwriting (font={fs:.2f})"
+    # typed-candidate -> VLM TERMINAL (only it separates neat printing from typed).
+    # No VLM configured -> 'uncertain' -> REVIEW (defer to human; no PII leaves).
+    label = _vlm_label(crop)
+    if label == "typed":
+        return abox, "TYPED_SIGNATURE", f"vlm typed (font={fs:.2f})"
+    if label == "handwritten":
+        return abox, "SIGNED", f"vlm handwritten (font={fs:.2f})"
+    return abox, "REVIEW", f"typed-candidate, vlm uncertain (font={fs:.2f})"
 
 
 def draw(img, box, status, note, name):

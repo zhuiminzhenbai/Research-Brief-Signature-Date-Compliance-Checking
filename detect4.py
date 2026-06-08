@@ -22,6 +22,7 @@ import fitz
 import common as C
 from fields_config import FIELDS, DEFAULT_OFFSETS, locate_field, get_fields
 from error4_mask2 import ink_mask_v2, feats
+from error4_fontmatch import font_score as _font_score, TF as _FONT_TF
 import vlm_classify
 
 OUT = r"C:\Users\25775\Desktop\OCR_research\detect4_out"
@@ -179,20 +180,26 @@ def process(rel, tpl, use_vlm=True):
                 "cc_h_cv": fe["cc_h_cv"], "band_conc": fe["band_conc"]}
         if pdscore < PD_TYPED:
             info["status"] = "SIGNED"; info["reason"] = "handwriting (low ocr conf)"
-        elif use_vlm:
-            cp = os.path.join(CROPS, f"{base[:24]}__{fld['name']}.png".replace(" ", "_"))
-            cv2.imwrite(cp, crop)
-            v = vlm_classify.classify(cp)
-            info["vlm"] = v["label"]; info["vlm_backend"] = v["backend"]
-            info["status"] = {"typed": "TYPED_SIGNATURE", "handwritten": "SIGNED"}.get(
-                v["label"], "REVIEW")
-            info["reason"] = f"vlm={v['label']}"
         else:
-            # No VLM configured: legible signatures can't be split typed-vs-handwriting
-            # locally (proven non-separable), and they are overwhelmingly handwriting, so
-            # DEFAULT-PASS them as SIGNED. Trade-off: a genuine typed signature in this band
-            # is silently passed (false negative) until a VLM is wired -> then restore REVIEW.
-            info["status"] = "SIGNED"; info["reason"] = "legible, no-vlm default-pass (handwriting assumed)"
+            # Layer-2 PREFILTER: font-template match selects typed-candidates. It cannot
+            # decide alone (neat hand-printing scores in the typed band too), only narrows
+            # who needs the VLM terminal verdict.
+            fs = _font_score(crop, pdtext)
+            info["font_score"] = round(fs, 3)
+            if fs < _FONT_TF:
+                info["status"] = "SIGNED"; info["reason"] = f"handwriting (font={fs:.2f})"
+            elif use_vlm:
+                cp = os.path.join(CROPS, f"{base[:24]}__{fld['name']}.png".replace(" ", "_"))
+                cv2.imwrite(cp, crop)
+                v = vlm_classify.classify(cp)
+                info["vlm"] = v["label"]; info["vlm_backend"] = v["backend"]
+                info["status"] = {"typed": "TYPED_SIGNATURE", "handwritten": "SIGNED"}.get(
+                    v["label"], "REVIEW")
+                info["reason"] = f"vlm={v['label']} (font={fs:.2f})"
+            else:
+                # typed-candidate but no VLM -> defer to human REVIEW (font-match alone
+                # cannot separate neat hand-printing from typed).
+                info["status"] = "REVIEW"; info["reason"] = f"typed-candidate, no-vlm (font={fs:.2f})"
         res["fields"][fld["name"]] = info
     return res
 

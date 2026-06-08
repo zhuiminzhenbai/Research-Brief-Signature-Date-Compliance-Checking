@@ -30,10 +30,30 @@ import os, base64, json, re, mimetypes, urllib.request
 
 DEFAULT_PROMPT = (
     "This image is a tight crop of the content written in a signature field on a "
-    "scanned government form. Decide whether it is a HANDWRITTEN signature or "
-    "TYPED (machine-printed) text. Reply with exactly one word on the first line: "
-    "HANDWRITTEN or TYPED. Then optionally one short reason."
+    "scanned government form. Decide whether it is a HANDWRITTEN signature (this "
+    "includes neat hand-printing in block letters) or TYPED (machine-printed) text. "
+    "Reply with exactly one word on the first line: HANDWRITTEN or TYPED."
 )
+
+
+def load_litellm_env(path=None, model="gpt-5.4-mini"):
+    """Configure the openai backend from this project's LiteLLM gateway (litellm.env).
+    Call once before classify() to route crops to the gateway. Never prints the key."""
+    path = path or os.path.join(os.path.dirname(os.path.abspath(__file__)), "litellm.env")
+    cfg = {}
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            if "=" in line and not line.strip().startswith("#"):
+                k, v = line.strip().split("=", 1)
+                cfg[k] = v.strip()
+    base = cfg["LITELLM_BASE_URL"].rstrip("/")
+    if not base.endswith("/v1"):
+        base += "/v1"
+    os.environ["VLM_BACKEND"] = "openai"
+    os.environ["VLM_BASE_URL"] = base
+    os.environ["VLM_API_KEY"] = cfg["LITELLM_API_KEY"]
+    os.environ["VLM_MODEL"] = model
+    return {"base": base, "model": model, "key_tail": cfg["LITELLM_API_KEY"][-4:]}
 
 
 def _data_url(path):
@@ -110,14 +130,18 @@ _BACKENDS = {"stub": _backend_stub, "openai": _backend_openai,
              "anthropic": _backend_anthropic}
 
 
-def classify(image_path, prompt=DEFAULT_PROMPT):
-    """Classify a signature-cell crop. Never raises: failures -> 'uncertain'."""
+def classify(image_path, prompt=DEFAULT_PROMPT, retries=2):
+    """Classify a signature-cell crop. Never raises: failures -> 'uncertain'.
+    Retries the backend (the gateway cold-starts and can time out on the first call)."""
     backend = os.environ.get("VLM_BACKEND", "stub").lower()
     fn = _BACKENDS.get(backend, _backend_stub)
-    try:
-        return fn(image_path, prompt)
-    except Exception as e:
-        return {"label": "uncertain", "raw": f"ERROR: {e}", "backend": f"{backend}:error"}
+    last = None
+    for _ in range(retries + 1):
+        try:
+            return fn(image_path, prompt)
+        except Exception as e:
+            last = e
+    return {"label": "uncertain", "raw": f"ERROR: {last}", "backend": f"{backend}:error"}
 
 
 if __name__ == "__main__":

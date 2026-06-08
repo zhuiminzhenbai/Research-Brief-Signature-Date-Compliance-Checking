@@ -143,7 +143,14 @@ def save(img, sub, prefix, base):
 
 
 def main():
+    import sys
     tpl = json.load(open(TPL_PATH, encoding="utf-8"))
+    if "--vlm" in sys.argv:                       # opt-in: route typed-candidates to the gateway
+        import vlm_classify
+        cfg = vlm_classify.load_litellm_env()     # PII crops will leave the machine
+        print(f"VLM ON: {cfg['model']} @ {cfg['base']} (key ...{cfg['key_tail']})", flush=True)
+    else:
+        print("VLM OFF (stub): typed-candidates -> REVIEW, no data leaves the machine", flush=True)
     from paddleocr import PaddleOCR
     ocr = PaddleOCR(use_doc_orientation_classify=False, use_doc_unwarping=False,
                     use_textline_orientation=True, lang="en")
