@@ -26,13 +26,21 @@ FIELDS = {
     ],
     "G-28 P3": [
         dict(name="attorney", required=True,
-             sig_re=r"\d\.?\s*a\.\s*Signatur\w*\s+of\s+Attorney", sig_excl=r"^Part\b", sig_order=0,
+             # "Attorney" is frequently OCR-garbled (Attorey/Attorncy/Aftorney/Attomey/...),
+             # "Signature"->"Signatyre", spaces dropped ("ofAttorney"), prefix "N.a." unstable.
+             # Anchor on the structural tail with loose spacing/garble tolerance:
+             # "Sign* of <A-word> ... Accr" (client tail is "Authorized", law-student is
+             # "Law Student", so no clash). ^Part (no \b) drops both "Part 5." and "Part5."
+             # section headers (the latter has no word boundary after "Part").
+             sig_re=r"Sign\w*\s*of\s*A\w+.{0,4}Accr", sig_excl=r"^Part", sig_order=0,
              date_re=r"Dat\w* of Signatur\w*", date_order=0, date_dir="right"),
         dict(name="law_student", required=False,
              sig_re=r"Signatur\w*\s+of\s+Law\s+Student", sig_excl=None, sig_order=0,
              date_re=r"Dat\w* of Signatur\w*", date_order=1, date_dir="right"),
         dict(name="client", required=True,
-             sig_re=r"\d\.?\s*a\.\s*Signatur\w*\s+of\s+Client", sig_excl=None, sig_order=0,
+             # prefix relaxed; but a bare "Signature of Client..." header sits ABOVE the real
+             # "2.a." label, so order=-1 picks the lowest match (the actual field label).
+             sig_re=r"(?:\d?\.?\s*a\.\s*)?Signatur\w*\s+of\s+Client", sig_excl=None, sig_order=-1,
              date_re=r"Dat\w* of Signatur\w*", date_order=2, date_dir="right"),
     ],
     "ETA-9089": [

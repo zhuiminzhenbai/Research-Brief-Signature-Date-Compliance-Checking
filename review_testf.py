@@ -20,7 +20,7 @@ from collections import Counter
 import fitz
 import cv2
 import common as C
-from ocr_cache import ocr_page, ocr_page_upright, rotate
+from ocr_cache import ocr_page, ocr_page_upright, rotate, footer_at_top
 from fields_config import locate_field, get_fields, FIELDS
 from error2_stray import compute_strays
 from visualize_results import verdict, verdict4, draw, offsets
@@ -56,7 +56,13 @@ def cached_ocr(ocr, pdf_path, rel):
             items, rot = data, 0
         else:
             items, rot = data["items"], data.get("rot", 0)
-        return items, rotate(C.render(pdf_path), rot)
+        if not footer_at_top(items):                     # cache already upright -> reuse
+            return items, rotate(C.render(pdf_path), rot)
+        # self-heal: stale cache has footer-at-top (180-flipped); re-OCR and rewrite
+        img0 = C.render(pdf_path)
+        items, rot = ocr_page_upright(ocr, img0)
+        json.dump({"items": items, "rot": rot}, open(cp, "w", encoding="utf-8"), ensure_ascii=False)
+        return items, rotate(img0, rot)
     img0 = C.render(pdf_path)
     items, rot = ocr_page_upright(ocr, img0)             # correct sideways scans
     json.dump({"items": items, "rot": rot}, open(cp, "w", encoding="utf-8"), ensure_ascii=False)

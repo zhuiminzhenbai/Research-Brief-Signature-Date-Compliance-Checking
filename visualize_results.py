@@ -26,7 +26,7 @@ TPL = r"C:\Users\25775\Desktop\OCR_research\templates.json"
 PROJ = r"C:\Users\25775\Desktop\OCR_research"
 
 SIG_INK, SIG_CC = 0.012, 4
-WEBER_FAIL, WEBER_REVIEW = 0.25, 0.35
+WEBER_FAIL, WEBER_REVIEW = 0.30, 0.35  # weber < 0.30 -> TOO_FAINT (too-faint error)
 COLORS = {"SIGNED": (0, 170, 0), "PASS": (0, 170, 0), "MISSING": (0, 0, 220),
           "TOO_FAINT": (0, 0, 220), "WRONG_BOX": (0, 140, 255),
           "REVIEW": (0, 200, 220), "TYPED_SIGNATURE": (0, 0, 220),

@@ -1,5 +1,5 @@
 """OCR every page once, cache text+score+box so all detectors can reuse it."""
-import os, sys, glob, json, hashlib
+import os, sys, glob, json, hashlib, re
 import numpy as np
 import fitz
 
@@ -65,21 +65,42 @@ def _ori_score(items):
     return horiz / len(multi) + mean_s          # prefer horizontal text that also reads confidently
 
 
+# Footer tokens common to all 3 form families; these always sit at the page BOTTOM
+# ("Page N of M", the "Form <code>" edition line, and the long barcode digit string).
+_FOOT_RE = re.compile(r"page\s*\d+\s*of\s*\d+|form\s+(?:g-28|i-140|eta-9089)|^\d{10,}", re.I)
+
+
+def footer_at_top(items, top_frac=0.25):
+    """True if every detected footer token sits in the top `top_frac` of the page.
+    0deg and 180deg both produce horizontal text (so OCR confidence can't tell them
+    apart); the footer's vertical position is the deterministic 180-flip signal."""
+    if not items:
+        return False
+    H = max(it["box"][3] for it in items)
+    foot = [(it["box"][1] + it["box"][3]) / 2 for it in items if _FOOT_RE.search(it.get("text", ""))]
+    return bool(foot) and max(foot) < top_frac * H
+
+
 def ocr_page_upright(ocr, img0):
     """OCR with orientation correction. OCRs as-rendered; if the page content is sideways
-    (vertical text lines), re-OCRs at 90/270 and keeps the orientation that reads upright.
-    Returns (items, angle) where angle is the clockwise rotation applied to img0. Detectors
-    must render the page and apply the SAME rotation so boxes and pixels stay aligned."""
+    (vertical text lines), re-OCRs at 90/270 and keeps the orientation that reads upright;
+    then, if the footer is at the top (page is 180 off in the horizontal axis), re-OCRs at
+    +180. Returns (items, angle) where angle is the clockwise rotation applied to img0.
+    Detectors must render the page and apply the SAME rotation so boxes/pixels stay aligned."""
     items = ocr_page(ocr, img0)
-    if not _sideways(items):
-        return items, 0
-    best = (items, 0, _ori_score(items))
-    for ang in (90, 270):
-        it = ocr_page(ocr, rotate(img0, ang))
-        sc = _ori_score(it)
-        if sc > best[2]:
-            best = (it, ang, sc)
-    return best[0], best[1]
+    angle = 0
+    if _sideways(items):
+        best = (items, 0, _ori_score(items))
+        for ang in (90, 270):
+            it = ocr_page(ocr, rotate(img0, ang))
+            sc = _ori_score(it)
+            if sc > best[2]:
+                best = (it, ang, sc)
+        items, angle = best[0], best[1]
+    if footer_at_top(items):                     # footer landed on top -> page is 180 flipped
+        angle = (angle + 180) % 360
+        items = ocr_page(ocr, rotate(img0, angle))
+    return items, angle
 
 
 def cache_path(rel):
